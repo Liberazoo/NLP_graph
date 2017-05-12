@@ -92,21 +92,62 @@ public class Postag {
 
                 /*  Next a switch statement will use field[1] to determine which
                     word class will be created by passing field[0] to it's 
-                    constructor. */                                                  
-                if(tag.equals("NN")) {System.out.println(word+" is a noun");}
+                    constructor. 
+                    Each of the cases in the switch statement are string versions
+                    of the Penn Tree Tags produced by the Stanford POSTagger
+                */                                                  
+
                 switch (tag) {
-                    case "NN" : {
+                    case "NN" :                     //Noun, singular or mass
+                    case "NNS" :                    //Noun, plural
+                    case "NNP" :                    //Proper noun, singular
+                    case "NNPS" :                   //Proper noun, plural   
+                    {
                         WordClass.Noun n = wc.new Noun(word);
                         System.out.println("New noun created: " + n.getNoun());
                         System.out.println("new plural created: " + n.getPlural());
                         break;
                     }
-                    case "VB" : {
+                    case "VB" :                     //Verb, base form
+                    case "VBD" :                    //Verb, past tense
+                    case "VBG" :                    //Verb, gerund or present participle
+                    case "VBN" :                    //Verb, past participle
+                    case "VBP" :                    //Verb, non-3rd person singular present
+                    case "VBZ" :                    //Verb, 3rd person singular present
+                    {
                         WordClass.Verb v = wc.new Verb(word);
                         System.out.println("New verb created: " + v.getVerb());
                         break;
                     }
-                    case "PRP" : {
+                    case "PRP" :                    //Personal pronoun
+                    case "PRP$" :                   //Possessive pronoun
+                    case "WP" :                     //Wh-pronoun, (interrogative pronouns)
+                                                    //who, which, whom, what
+                    case "WP$" :                    //Possessive wh-pronoun, whose
+                    {
+                        WordClass.Pronoun p = wc.new Pronoun(word);
+                        System.out.println("New pronoun created: " + p.getPronoun());
+                        break;
+                    }
+                    case "JJ" :                 //Adjective
+                    case "JJR" :                //Adjective, comparative
+                    case "JJS" :                //Adjective, superlative 
+                    {
+                        WordClass.Adjective a = wc.new Adjective(word);
+                        System.out.println("New adjective created: " + a.getAdjective());
+                        break;
+                    }
+                    case "RB" :                 //Adverb
+                    case "RBR" :                //Adverb, comparative
+                    case "RBS" :                //Adverb, superlative 
+                    case "WRB" :                //Wh-adverb ... when, why, how, etc.
+                    {
+                        WordClass.Adverb a = wc.new Adverb(word);
+                        System.out.println("New adjective created: " + a.getAdverb());
+                        break;
+                    }
+                    case "CD" :                 //Cardinal number
+                    {
                         WordClass.Pronoun p = wc.new Pronoun(word);
                         System.out.println("New pronoun created: " + p.getPronoun());
                         break;

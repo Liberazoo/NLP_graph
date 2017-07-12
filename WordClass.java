@@ -4,7 +4,11 @@
  * and open the template in the editor.
  */
 package wordgraph;
-
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Map; 
+import java.util.AbstractMap;
+import java.util.AbstractMap.SimpleEntry;
 /**
  *
  * @author David
@@ -17,19 +21,52 @@ public final class WordClass {
 
     public WordClass() {}; // the outer class cannot be instantiated
     
+    
+    
     public class Noun {
+        
+        /* map of irregular nouns */
+        ArrayList<Map.Entry<String, String>> irregularPlurals = 
+            new ArrayList<Map.Entry<String, String>>();
+        
+        
     
         String noun = null;
-        String possesive = null;
+        String possessive = null;
         String plural = null;
 
-        public Noun(String n) {
-            noun = n;
+        public Noun(String n){
+            if(n != null && !n.isEmpty())
+            noun = n.toLowerCase();
+            setPlural();
+        }
+        public Noun(String singular, String plural) {
+            if(singular != null && !singular.isEmpty())
+            noun = singular.toLowerCase();
+            
+            /* add irregular plurals 
+            irregularPlurals.add(new AbstractMap.SimpleEntry("child", "children"));
+            irregularPlurals.add(new AbstractMap.SimpleEntry("man", "men"));
+            irregularPlurals.add(new AbstractMap.SimpleEntry("woman", "women"));
+            */
+            
+            if(plural != null && !plural.isEmpty())
+                plural = plural.toLowerCase();
+            else setPlural();
+            
+            
         }
 
-        public Noun(String possesive, String plural) {
-            this.possesive = possesive;
-            this.plural = plural;
+        public Noun(String singular, String plural, String possessive) {
+            if(singular != null && !singular.isEmpty())
+            noun = singular.toLowerCase();
+            
+            if(plural != null && !plural.isEmpty())
+                plural = plural.toLowerCase();
+            else setPlural();
+            
+            if(possessive != null && !possessive.isEmpty())
+            possessive = possessive.toLowerCase();
         }
        
         public String getNoun() {
@@ -37,20 +74,69 @@ public final class WordClass {
         }
 
         public String getPossessive() {
+            return possessive;
+        }
+        
+        public void setPossessive() {
             char[] nounArray = noun.toCharArray();
             int last = nounArray.length;
             if(nounArray[last-1] == 's'){
-                possesive = noun + "'";
+                possessive = noun + "'";
             }
             else {
-                possesive = noun + "s";
+                possessive = noun + "s";
             }
-            return possesive;
         }
 
         public String getPlural() {
             return plural;
         }
+
+        public void setPlural() {
+            
+           char[] nounArray = noun.toCharArray();
+            int last = nounArray.length;
+            //ends in sh or ch
+            if((nounArray[last-1] == 's') || (nounArray[last-1] == 'c') &&
+                    (nounArray[last-2] == 'h')) {
+                plural = noun + "es";
+            }
+            //ends in s, x or z
+            else if ((nounArray[last-1] == 's') || (nounArray[last-1] == 'x') &&
+                    (nounArray[last-2] == 'z')){
+                plural = noun + "es";
+            }
+            //ends in y preceded by consonant
+            else if((nounArray[last-1] == 'y') &&
+                    (Letter.isConsonant(nounArray[last-2]))){
+                nounArray = Arrays.copyOfRange(nounArray,0,last-2);
+                plural = noun + "ies";
+            }
+            //ends in y preceded by vowel
+            else if((nounArray[last-1] == 'y') &&
+                    (Letter.isVowel(nounArray[last-2]))){
+                plural = noun + "s";
+            }
+            //ends in f
+            else if(nounArray[last-1] == 'f'){
+                nounArray = Arrays.copyOfRange(nounArray,0,last-2);
+                plural = noun + "ves";
+            }
+            else if((nounArray[last-1] == 'e') &&
+                    (nounArray[last-2] == 'f')){
+                nounArray = Arrays.copyOfRange(nounArray,0,last-3);
+                plural = noun + "ves";
+            }
+            /* if noun is found in ireegular map */
+            
+            //otherwise noun is regular, add s
+            else{
+                plural = noun + "s";
+            }
+                              
+            
+        }
+        
     
     } //end class Noun
     
@@ -261,8 +347,9 @@ public final class WordClass {
         String adjective = null;
         String comparative = null;
         String superlative = null;
+        PennTag pt = null;
 
-        public Adjective(String a) {
+        public Adjective(String a, PennTag pt) {
             adjective = a;
         }
 
@@ -295,13 +382,20 @@ public final class WordClass {
     public class Adverb {
         
         String adverb = null;
-        String comparative = null;
-        String superlative = null;
-        Boolean whAdverb = false;
+        Boolean isComparative = false;
+        Boolean isSuperlative = false;
+        Boolean isWhAdverb = false;
 
-        public Adverb(String a) {
+        public Adverb(String a, PennTag pt) {
             adverb = a;
-        }
+            switch (pt) {
+                case RB : { //do nothing. The adverb is in base form 
+                }
+                case RBR : { isComparative = true; }
+                case RBS : { isSuperlative = true;}
+                case WRB : { isWhAdverb = true;}
+                }//end switch
+            }//end constructor
 
         public String getAdverb() {
             return adverb;
@@ -311,29 +405,33 @@ public final class WordClass {
             this.adverb = adverb;
         }
 
-        public String getComparative() {
-            return comparative;
+        public Boolean getIsSuperlative() {
+            return isSuperlative;
         }
 
-        public void setComparative(String comparative) {
-            this.comparative = comparative;
+        public void setIsSuperlative(Boolean isSuperlative) {
+            this.isSuperlative = isSuperlative;
         }
 
-        public String getSuperlative() {
-            return superlative;
+        public Boolean getIsWhAdverb() {
+            return isWhAdverb;
         }
 
-        public void setSuperlative(String superlative) {
-            this.superlative = superlative;
+        public void setIsWhAdverb(Boolean isWhAdverb) {
+            this.isWhAdverb = isWhAdverb;
         }
 
-        public Boolean isWhAdverb() {
-            return whAdverb;
+        public Boolean getIsComparative() {
+            return isComparative;
         }
 
-        public void setWhAdverb(Boolean whAdverb) {
-            this.whAdverb = whAdverb;
-        }   
+        public void setIsComparative(Boolean isComparative) {
+            this.isComparative = isComparative;
+        }
+
+        
+        
+
     }//end inner class Adverb
     
     public class Number {
@@ -343,7 +441,7 @@ public final class WordClass {
 
         /*  if the word object is created from the cardinal, but the ordinal is not available yet,
             then the code to create the object would be Number n = new Number ("One," null);
-            For the reverse, code is Number n = new Number(null,"First);
+            For the reverse, code is Number n = new Number(null,"First");
             In the cases the null variable can be filled in later with a setter
             In the case where both carindal and ordinal are available to create the
             number object, use the second constructor, thusly, Number n = new Number("One","First");

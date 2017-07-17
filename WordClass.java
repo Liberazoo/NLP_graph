@@ -4,6 +4,9 @@
  * and open the template in the editor.
  */
 package wordgraph;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Map; 
@@ -17,47 +20,38 @@ import java.util.AbstractMap.SimpleEntry;
  * It is final, cannot be extended and should only be accessed to create objects
  * of the inner classes.
  */
-public final class WordClass {
+public final class WordClass  {
 
     public WordClass() {}; // the outer class cannot be instantiated
     
     
     
-    public class Noun {
+    public class Noun  {
         
         /* map of irregular nouns */
         ArrayList<Map.Entry<String, String>> irregularPlurals = 
             new ArrayList<Map.Entry<String, String>>();
         
-        
-    
         String noun = null;
         String possessive = null;
         String plural = null;
 
-        public Noun(String n){
+        public Noun(String n) throws IOException, ClassNotFoundException{
             if(n != null && !n.isEmpty())
             noun = n.toLowerCase();
             setPlural();
         }
-        public Noun(String singular, String plural) {
+        public Noun(String singular, String plural)throws IOException, ClassNotFoundException {
             if(singular != null && !singular.isEmpty())
             noun = singular.toLowerCase();
             
-            /* add irregular plurals 
-            irregularPlurals.add(new AbstractMap.SimpleEntry("child", "children"));
-            irregularPlurals.add(new AbstractMap.SimpleEntry("man", "men"));
-            irregularPlurals.add(new AbstractMap.SimpleEntry("woman", "women"));
-            */
             
             if(plural != null && !plural.isEmpty())
                 plural = plural.toLowerCase();
             else setPlural();
-            
-            
         }
-
-        public Noun(String singular, String plural, String possessive) {
+        
+        public Noun(String singular, String plural, String possessive) throws IOException, ClassNotFoundException {
             if(singular != null && !singular.isEmpty())
             noun = singular.toLowerCase();
             
@@ -92,7 +86,38 @@ public final class WordClass {
             return plural;
         }
 
-        public void setPlural() {
+        public void setPlural() throws IOException, ClassNotFoundException {
+            
+            
+            //add iregular plurals an an abstract map
+            //location of irregular noun plurals file
+            String fileName = "C:\\Users\\David\\Documents\\nlp_project\\NLP Data Files\\irregularNounPlurals.txt";
+      
+            String line,word1,word2;
+        
+            // FileReader reads text files in the default encoding.
+            FileReader fileReader = 
+                new FileReader(fileName);
+
+
+            // Always wrap FileReader in BufferedReader.
+            BufferedReader bufferedReader = 
+                new BufferedReader(fileReader);
+            //read from file until end of file is reached
+            while((line = bufferedReader.readLine()) != null) {
+                if(!line.isEmpty())
+                {
+                    String[] field = line.split(",");
+                    word1 = field[0].trim();
+                    word2 = field[1].trim();           
+                    irregularPlurals.add(new AbstractMap.SimpleEntry(word1,word2));
+                }
+            }
+            /*
+            for(Map.Entry<String,String> m : irregularPlurals){
+                System.out.println(m.getKey() + " " + m.getValue());
+            }*/
+            
             
            char[] nounArray = noun.toCharArray();
             int last = nounArray.length;
@@ -127,7 +152,10 @@ public final class WordClass {
                 nounArray = Arrays.copyOfRange(nounArray,0,last-3);
                 plural = noun + "ves";
             }
-            /* if noun is found in ireegular map */
+            /* if noun is found in irregular map */
+            else if (contains()) {
+                plural = getValue(noun);
+            }
             
             //otherwise noun is regular, add s
             else{
@@ -135,6 +163,24 @@ public final class WordClass {
             }
                               
             
+        }
+        
+        /* return true if arraylist irregularPlurals contains a particular
+        map key which is equal to the current noun
+        */
+        public Boolean contains(){
+            for(Map.Entry<String,String> m : irregularPlurals){
+                if (m.getKey().equals(noun)) return true;
+            }
+            return false;
+        }
+        
+        /* return given value in irregularPlurals for a partculat map key */
+        public String getValue(String key){
+            for(Map.Entry<String,String> m : irregularPlurals){
+                if (m.getKey().equals(key)) return m.getValue();
+            }
+            return null;
         }
         
     

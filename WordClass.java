@@ -35,6 +35,12 @@ public final class WordClass  {
         String noun = null;
         String possessive = null;
         String plural = null;
+        
+        /*  Boolean or string fields (with their corresponding methods below)
+            be necessary here for cases/declensions required by verb alternations. 
+            See note in inner verb class below. E.g., the dative alternation
+            may require only nouns (and pronouns?) that function as datives.
+        */
 
         public Noun(String n) throws IOException, ClassNotFoundException{
             if(n != null && !n.isEmpty())
@@ -89,7 +95,7 @@ public final class WordClass  {
         public void setPlural() throws IOException, ClassNotFoundException {
             
             
-            //add iregular plurals an an abstract map
+            //add iregular plurals as an abstract map
             //location of irregular noun plurals file
             String fileName = "C:\\Users\\David\\Documents\\nlp_project\\NLP Data Files\\irregularNounPlurals.txt";
       
@@ -118,7 +124,7 @@ public final class WordClass  {
                 System.out.println(m.getKey() + " " + m.getValue());
             }*/
             
-            
+            /* create the plural form from the noun stem */
            char[] nounArray = noun.toCharArray();
             int last = nounArray.length;
             //ends in sh or ch
@@ -189,6 +195,33 @@ public final class WordClass  {
     public class Verb {
     
         String verb = null; //base form (to + base = infinitive)
+        String alternation = null; //refers to the verb alternation
+        String alt_class = null; //refers to the class of verbs that the
+                                 //verb's alternation belongs to
+        
+        /*  See https://www.wikiwand.com/en/Alternation_(linguistics)
+            for general definition of linguistic alternation  
+        
+            According to Pinker in "The Stuff of Thought," verb alternations
+            are rules that transform "not the arrangement of the phrases in a
+            construction, but something more abstract, namely, the framing
+            of events that goes into its meaning" (p.43) It may be that
+            using verb and other alternations, along with other algorithms
+            in the final MIM (Multidimensional Idea Model) package, will be 
+            enough to mimic meaning from syntax and semantics. If that is not 
+            the case see note below
+        */
+        
+        /*  Other string or boolean fields will go here to handle other ways
+            of categorizes verbs linguistically that may become necessary, such
+            as transitive, instranstive, those that take a direct object, those
+            that take an oblique object (requiring a preposition, etc.)
+            
+             It also may be necessary to add other linguistic categories such
+             as the roles the other parts of the sentence play, such as actor,
+             agent, theta-role, etc. according to linguistic theories other 
+             than Pinker's.
+        */
 
         public Verb(String v) {
             verb = v;
@@ -201,6 +234,48 @@ public final class WordClass  {
         public void setVerb(String verb) {
             this.verb = verb;
         }
+
+        /*
+            The verb alternation and alt_class field will take the form of
+            three integers which correspond to Beth Levin's
+            classification in English Verb Classes and Alternations: A 
+            Preliminary Investigation. 
+        
+            The three integers will be separated by periods, e.g. "40.1.2"
+            which correspond to the overall class and its first and second
+            subdivision. When a verb belongs to one of Levin's classes
+            that does not have a second subdivision, such as "3.5", it will 
+            be represented here with a zero in place of the missing integer. 
+        
+            It may be necessary to create a file of the names of these classes
+            which could then be read into the MIM as a set of relationship/edges
+            between vertices, e.g. if such a verb took the "Dative Alternation"
+            (2.1 in Levin and 2.1.0 in our representation) then this verb
+            would point to the vertex for the words "Dative" and "Alternation"
+            using an edge/relationship labeled "Alternation". 
+        */
+        public String getAlternation() {
+            return alternation;
+        }
+
+        public void setAlternation(String alternation) {
+            this.alternation = alternation;
+        }
+        
+        public String getAlt_class() {
+            return alt_class;
+        }
+
+        public void setAlt_class(String alt_class) {
+            this.alt_class = alt_class;
+        }
+        
+        /*  we may need a method to break the alternation field into the three
+            separate integers here, as well as a method to break the alternation
+            class field into three integers. 
+        */
+        
+        
     }//end inner class Verb
     
     //inner class Pronoun

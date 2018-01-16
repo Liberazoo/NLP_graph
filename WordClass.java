@@ -196,7 +196,7 @@ public final class WordClass  {
     
         String verb = null; //base form (to + base = infinitive)
         String alternation = null; //refers to the verb alternation
-        String alt_class = null; //refers to the class of verbs that the
+        String verbClass = null; //refers to the class of verbs that the
                                  //verb's alternation belongs to
         
         /*  See https://www.wikiwand.com/en/Alternation_(linguistics)
@@ -235,11 +235,24 @@ public final class WordClass  {
             this.verb = verb;
         }
 
+        public String getVerbClass() {
+            return verbClass;
+        }
+
+        public void setVerbClass(String verbClass) {
+            this.verbClass = verbClass;
+        }
+        
+        
+
         /*
-            The verb alternation and alt_class field will take the form of
+            The verb alternation and verb_class field will take the form of
             three integers which correspond to Beth Levin's
             classification in English Verb Classes and Alternations: A 
             Preliminary Investigation. 
+        
+            The alternation field corresponds to Levin's number classification
+            1-8, and the verb_class field corresponds to 9-57
         
             The three integers will be separated by periods, e.g. "40.1.2"
             which correspond to the overall class and its first and second
@@ -262,16 +275,10 @@ public final class WordClass  {
             this.alternation = alternation;
         }
         
-        public String getAlt_class() {
-            return alt_class;
-        }
-
-        public void setAlt_class(String alt_class) {
-            this.alt_class = alt_class;
-        }
+        
         
         /*  we may need a method to break the alternation field into the three
-            separate integers here, as well as a method to break the alternation
+            separate integers here, as well as a method to break the verb
             class field into three integers. 
         */
         

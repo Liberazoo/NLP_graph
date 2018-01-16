@@ -14,3 +14,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   abstract mathematics, data structures, natural language processing and other
   disciplines in order to eventually publish an academic paper introducing the
   first working prototype.
+  
+[Unreleased]: https://github.com/Liberazoo/NLP_graph

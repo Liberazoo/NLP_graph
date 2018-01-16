@@ -1,0 +1,39 @@
+A draft definition of the Multidimensional Idea Model (MIM)
+(Note: eventually put in hyperlinks within the document like nLab website. See <nLab entry: Directed Graphs>)
+
+0.    The multidimensional idea model or MIM is a hypergraph, whose vertices contain Word objects (1) and whose edges 
+      contain Relation objects (2) 
+      
+1.    Word Objects
+
+1.1.  A Word object may be one of the following classes: Noun, Verb, Pronoun, Adjective, Adverb, or Number 
+      (with further classes to be added later as necessary, including Preposition, Conjunction, Determiner, etc.)
+
+1.2.  A Word object will consist of several fields including a principle String field containing its base form. 
+      For example, the base form of a Verb class is its infinitive without the “to”. 
+      The base form is also considered as its entry in the dictionary. 
+      Another way to look at a Word object is that it is a lexeme, which Wikipedia defines as “a basic unit of meaning, 
+      and the headwords of a dictionary are all lexemes. Put more technically, a lexeme is an abstract unit of morphological 
+      analysis in linguistics, that roughly corresponds to a set of forms taken by a single word.”
+      For example, the lexeme “take off” and “put away” are lexemes representing specific concepts and are not reducible to a 
+      Verb object followed by a Preposition. 
+      
+1.2.1.Lexemes of more than one word (or token) are not necessarily stored as a single Word object, although it may be desirable 
+      to do so in future iterations of the MIM). Initially, lexemes will be stored as leximic relations, i.e. as a sub-graph 
+      consisting of the set of vertices, each one a token of the Lexeme, connected by edges labelled (or whose morphism is) 
+      “is a lexeme”. The edge label (or Relation) is, of course, itself a sub-graph consisting of the individual Word objects 
+      for the tokens “is” and “lexeme” (there will be no need for using the determiners “a” and “the”, for then all Relations’ 
+      morphisms would unneccesarily have edges to the tokens for those determiners). Since a Relation object is itself a 
+      relation morphism (or a Relation object is the data structure representing a relation morphism), one could call the Relation 
+      object a root relation, since all other Relations are based upon it. As a root relation, the notion of the Relation will 
+      not be stored in the hypergraph, nor will any other Objects of type Root (unless there are special cases found necessary 
+      for functions, either mathematically or algorithmically in future iterations of the code). 
+      [insert links to Relation and root relation]
+
+1.3.  Each of the Word objects which require them will have further classifications, either Boolean or String fields to 
+      indicate a related form of the base form token. For example, Nouns have a base form, plural form and posessive form; 
+      irregular plurals are kept in a separate datafile at present (encoded as a Map) but could easily be stored within 
+      the hypergraph itself as a Relation object. Adjectives and Adverbs have their base form (or positive inflection), 
+      comparative and superlative, etc.
+      
+2.    Relation Objects
